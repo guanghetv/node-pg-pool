@@ -93,6 +93,17 @@ Pool.prototype._create = function (cb) {
     this.emit('error', e, client)
   }.bind(this))
 
+  client.on('release', function () {
+    /* 
+     * @sqlArray {Array} 普通语句/事务
+     * [
+     *   'sql',
+     *   { text: 'sql', values: [$1, $2] }
+     * ]
+     */
+    this.emit('release', client.native.sqlArray, client)
+  }.bind(this))
+
   client.connect(function (err) {
     if (err) {
       this.log('client connection error:', err)
@@ -123,6 +134,7 @@ Pool.prototype.connect = function (cb) {
       this.emit('acquire', client)
 
       client.release = function (err) {
+        client.emit('release');
         delete client.release
         if (err) {
           this.log('destroy client. error:', err)
