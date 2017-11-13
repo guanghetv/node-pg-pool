@@ -102,6 +102,7 @@ Pool.prototype._create = function (cb) {
      * ]
      */
     this.emit('release', client.native.sqlArray, client)
+    client.native.sqlArray = []
   }.bind(this))
 
   client.connect(function (err) {
