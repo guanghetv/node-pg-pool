@@ -97,7 +97,6 @@ Pool.prototype._create = function (cb) {
     /* 
      * @sqlArray {Array} 普通语句/事务
      * [
-     *   'sql',
      *   { text: 'sql', values: [$1, $2] }
      * ]
      */
@@ -135,7 +134,6 @@ Pool.prototype.connect = function (cb) {
       this.emit('acquire', client)
 
       client.release = function (err) {
-        client.emit('release');
         delete client.release
         if (err) {
           this.log('destroy client. error:', err)
@@ -143,6 +141,7 @@ Pool.prototype.connect = function (cb) {
         } else {
           this.log('release client')
           this.pool.release(client)
+          client.emit('release')
         }
       }.bind(this)
 
