@@ -101,7 +101,6 @@ Pool.prototype._create = function (cb) {
      * ]
      */
     this.emit('release', client.native.sqlArray, client)
-    client.native.sqlArray = []
   }.bind(this))
 
   client.connect(function (err) {
@@ -143,6 +142,7 @@ Pool.prototype.connect = function (cb) {
           this.pool.release(client)
           client.emit('release')
         }
+        client.native.sqlArray = []
       }.bind(this)
 
       if (cb) {
